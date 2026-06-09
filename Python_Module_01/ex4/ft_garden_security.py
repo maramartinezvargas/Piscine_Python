@@ -37,7 +37,7 @@ class Plant:
                   f"Height update rejected")
             return
         self.height = new_height
-        print(f"Height updated: {int(self.height)}cm")
+        print(f"Height updated: {round(self.height)}cm")
 
     def set_age(self, new_age: int) -> None:
         """Set the age of the plant to a new value in days"""
@@ -56,12 +56,12 @@ if __name__ == "__main__":
     rose.show()
 
     print()
-    rose.set_height(25)  # Valid height update
-    rose.set_age(30)       # Valid age update
+    rose.set_height(25.0)
+    rose.set_age(30)
 
     print()
-    rose.set_height(-5.0)  # Invalid height update
-    rose.set_age(-3)       # Invalid age update
+    rose.set_height(-5.0)
+    rose.set_age(-3)
 
     print()
     print("Current state: ", end="")
