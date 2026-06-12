@@ -3,10 +3,11 @@
 class Plant:
     """Representing a plant in the garden that grows and ages over time"""
     name: str
-    height: float
-    days_old: int
+    _height: float
+    _days_old: int
+    _stats: "_Statistics"
 
-    class _stadistics:
+    class _Statistics:
         """Subclass to track growth, age, and show counts for the plant"""
         grow: int
         age: int
@@ -21,24 +22,39 @@ class Plant:
             print(f"Stats: {self.grow} grow, {self.age} age, {self.show} show")
 
     def __init__(self, name: str, height: float, days_old: int) -> None:
+        """Initialize a new plant with the given name, height, and age in days
+        If height or age is negative, print an error message and set the value
+        to 0"""
         self.name = name
-        self.height = height
-        self.days_old = days_old
-        self._stats = self._stadistics()
+        self._height = 0.0
+        self._days_old = 0
+        self._stats = self._Statistics()
+
+        if height < 0:
+            print(f"{name}: Error, height can't be negative\n"
+                  f"Height update rejected")
+        else:
+            self._height = height
+
+        if days_old < 0:
+            print(f"{name}: Error, age can't be negative\n"
+                  f"Age update rejected")
+        else:
+            self._days_old = days_old
 
     def show(self) -> None:
         self._stats.show += 1
-        print(f"{self.name}: {self.height:.1f}cm, {self.days_old} days old")
+        print(f"{self.name}: {self._height:.1f}cm, {self._days_old} days old")
 
     def grow(self) -> None:
         """Simulate the growth of the plant for one day"""
         self._stats.grow += 1
-        self.height += 8.0
+        self._height += 8.0
 
     def age(self) -> None:
         """Simulate the aging of the plant for one day"""
         self._stats.age += 1
-        self.days_old += 1
+        self._days_old += 1
 
     @staticmethod
     def is_older(age: int) -> bool:
@@ -52,11 +68,11 @@ class Plant:
 
     def get_height(self) -> float:
         """Return the current height of the plant"""
-        return self.height
+        return self._height
 
     def get_age(self) -> int:
         """Return the current age of the plant in days"""
-        return self.days_old
+        return self._days_old
 
     def set_height(self, new_height: float) -> None:
         """Set the height of the plant to a new value"""
@@ -64,8 +80,8 @@ class Plant:
             print(f"{self.name}: Error, height can't be negative\n"
                   f"Height update rejected")
             return
-        self.height = new_height
-        print(f"Height updated: {int(self.height)}cm")
+        self._height = new_height
+        print(f"Height updated: {int(self._height)}cm")
 
     def set_age(self, new_age: int) -> None:
         """Set the age of the plant to a new value in days"""
@@ -73,8 +89,8 @@ class Plant:
             print(f"{self.name}: Error, age can't be negative\n"
                   f"Age update rejected")
             return
-        self.days_old = new_age
-        print(f"Age updated: {self.days_old} days")
+        self._days_old = new_age
+        print(f"Age updated: {self._days_old} days")
 
     def show_statistics(self) -> None:
         """Show the growth, age, and show counts for the plant"""
@@ -114,7 +130,18 @@ class Seed(Flower):
 
     def show(self) -> None:
         super().show()
-        print(f"Seeds : {self.seeds}")
+        print(f"Seeds: {self.seeds}")
+
+    def grow(self) -> None:
+        """Simulate the growth of the seed for one day and update its height"""
+        self._height += 30.0
+        self._stats.grow += 1
+
+    def age(self) -> None:
+        """Simulate the aging of the seed for one day
+        and update its age in days"""
+        self._days_old += 20
+        self._stats.age += 1
 
     def bloom(self) -> None:
         """Simulate the blooming of the seed and produce seeds"""
@@ -142,7 +169,7 @@ class Tree(Plant):
         self.shade_calls += 1
         print(
             f"Tree {self.name} now produces a shade of "
-            f"{self.height:.1f}cm long and "
+            f"{self.get_height():.1f}cm long and "
             f"{self.trunk_diameter:.1f}cm wide."
         )
 
@@ -153,8 +180,8 @@ class Tree(Plant):
 
 
 class Vegetable(Plant):
-    """Representing a vegetable in the garden that has a harvest season and"
-        "nutritional value attributes"""
+    """Representing a vegetable in the garden that has a harvest season
+    and nutritional value attributes"""
     harvest_season: str
     nutritional_value: int
 
@@ -172,9 +199,9 @@ class Vegetable(Plant):
     def grow(self) -> None:
         """Simulate the growth of the vegetable for one day and update its
         nutritional value"""
-        super().grow()
-        self.height += 2.1
+        self._height += 2.1
         self.nutritional_value += 1
+        self._stats.grow += 1
 
     def age(self) -> None:
         """Simulate the aging of the vegetable for one day and update its
