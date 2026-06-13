@@ -10,16 +10,16 @@ def test_temperature() -> None:
 
     temps = ["25", "abc"]
     for temp_str in temps:
-        print(f"Input data is {temp_str}")
+        print(f"Input data is '{temp_str}'")
         try:
             temp = input_temperature(temp_str)
-            print(f"Temperature is now {temp} ºC")
+            print(f"Temperature is now {temp}°C")
         except ValueError as e:
             print(f"Caught input_temperature error: {e}")
 
         print()
 
-    print("All test completed - program didn't crash!")
+    print("All tests completed - program didn't crash!")
 
 
 if __name__ == "__main__":
