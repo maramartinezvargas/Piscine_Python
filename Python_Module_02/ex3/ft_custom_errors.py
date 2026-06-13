@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 class GardenError(Exception):
     def __init__(self, message: str = "Unknown garden error") -> None:
         super().__init__(message)
@@ -28,7 +27,6 @@ def test_custom_errors() -> None:
     print("=== Custom Garden Errors Demo ===")
 
     print("\nTesting PlantError...")
-
     try:
         check_plant()
     except PlantError as e:
