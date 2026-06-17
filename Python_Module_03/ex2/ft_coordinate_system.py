@@ -14,7 +14,6 @@ def get_player_pos() -> tuple[float, float, float]:
             continue
 
         coords: list[float] = []
-
         valid = True
 
         for part in parts:
