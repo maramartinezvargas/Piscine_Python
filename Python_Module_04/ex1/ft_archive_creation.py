@@ -13,8 +13,6 @@ def ft_ancient_text() -> None:
     print("=== Cyber Archives Recovery & Preservation ===")
     filename: str = sys.argv[1]
     print(f"Accessing file '{filename}'")
-    file = None
-    new_file = None
     try:
         file = open(filename, "r")
         print("---")
@@ -26,8 +24,7 @@ def ft_ancient_text() -> None:
 
         print("Transform data:")
         print("---")
-        transformed_content: str = ""
-        transformed_content = content.replace("\n", "#\n")
+        transformed_content: str = content.replace("\n", "#\n")
         print(transformed_content, end="")
 
         print("\n---")

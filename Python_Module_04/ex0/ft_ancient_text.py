@@ -11,7 +11,6 @@ def ft_ancient_text() -> None:
     print("=== Cyber Archives Recovery ===")
     filename: str = sys.argv[1]
     print(f"Accessing file '{filename}'")
-    file = None
     try:
         file = open(filename, "r")
         print("---\n")
