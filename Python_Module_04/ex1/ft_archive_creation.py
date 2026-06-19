@@ -28,7 +28,6 @@ def ft_ancient_text() -> None:
         print("---")
         transformed_content: str = ""
         transformed_content = content.replace("\n", "#\n")
-        transformed_content = transformed_content + "#"
         print(transformed_content, end="")
 
         print("\n---")

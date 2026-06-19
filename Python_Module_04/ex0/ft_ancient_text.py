@@ -14,7 +14,7 @@ def ft_ancient_text() -> None:
     file = None
     try:
         file = open(filename, "r")
-        print("---")
+        print("---\n")
         print(file.read(), end="")
         print("\n---")
         file.close()
