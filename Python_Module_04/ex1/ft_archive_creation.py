@@ -4,11 +4,13 @@ import sys
 
 
 def ft_ancient_text() -> None:
-    """Reads and prints the content of a specified file."""
+    """Reads and prints the content of a specified file,
+    transforms the content by replacing newlines with '#',
+    and optionally saves the transformed content to a new file."""
     if len(sys.argv) != 2:
         print("Usage: ft_ancient_text.py <file>")
         return
-    print("=== Cyber Archives Recovery ===")
+    print("=== Cyber Archives Recovery & Preservation ===")
     filename: str = sys.argv[1]
     print(f"Accessing file '{filename}'")
     file = None
@@ -18,17 +20,14 @@ def ft_ancient_text() -> None:
         print("---")
         content = file.read()
         print(content, end="")
-        print("\n---")
-        print(f"File '{filename}' closed.")
         file.close()
+        print(f"File '{filename}' closed.")
+        print("\n---")
 
         print("Transform data:")
         print("---")
         transformed_content: str = ""
-        file = open(filename, 'r')
-        for line in file:
-            transformed_content += line.replace("\n", "#\n")
-        file.close()
+        transformed_content = content.replace("\n", "#\n")
         transformed_content = transformed_content + "#"
         print(transformed_content, end="")
 
@@ -40,15 +39,10 @@ def ft_ancient_text() -> None:
             print(f"Saving data to '{save_in}'")
             new_file = open(save_in, 'w')
             new_file.write(transformed_content)
-            print(f"Data saved in file '{save_in}'")
+            print(f"Data saved in file '{save_in}'.")
             new_file.close()
     except OSError as e:
         print(f"Error opening file '{filename}': {e}")
-    finally:
-        if file is not None:
-            file.close()
-        if new_file is not None:
-            new_file.close()
 
 
 if __name__ == "__main__":
