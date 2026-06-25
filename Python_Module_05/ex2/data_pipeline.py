@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-#!/usr/bin/env python3
 
-from typing import Any
+from typing import Any, Protocol
 from abc import ABC, abstractmethod
 
 
@@ -96,23 +95,11 @@ class LogProcessor(DataProcessor):
 
     def validate(self, data: Any) -> bool:
 
-        if isinstance(data, dict):
-            return all(
-                isinstance(key, str)
-                and isinstance(value, str)
-                for key, value in data.items()
-            )
+        if self._is_valid_log(data):
+            return True
 
         if isinstance(data, list):
-            return all(
-                isinstance(item, dict)
-                and all(
-                    isinstance(key, str)
-                    and isinstance(value, str)
-                    for key, value in item.items()
-                )
-                for item in data
-            )
+            return all(self._is_valid_log(item) for item in data)
 
         return False
 
@@ -136,6 +123,46 @@ class LogProcessor(DataProcessor):
             )
             self._data.append((self._count, log))
             self._count += 1
+
+    def _is_valid_log(self, data: Any) -> bool:
+
+        return (
+            isinstance(data, dict)
+            and "log_level" in data
+            and "log_message" in data
+            and isinstance(data["log_level"], str)
+            and isinstance(data["log_message"], str)
+        )
+
+
+class ExportPlugin(Protocol):
+
+    def process_output(self, data: list[tuple[int, str]]) -> None:
+        ...
+
+
+class CSVExportPlugin:
+
+    def process_output(self, data: list[tuple[int, str]]) -> None:
+
+        values = [value for _, value in data]
+
+        print("CSV Output:")
+        print(",".join(values))
+
+
+class JSONExportPlugin:
+
+    def process_output(self, data: list[tuple[int, str]]) -> None:
+
+        items: list[str] = []
+
+        for index, value in data:
+            escaped = (value.replace("\\", "\\\\").replace('"', '\\"'))
+            items.append(f'"item_{index}": "{escaped}"')
+
+        print("JSON Output:")
+        print("{" + ", ".join(items) + "}")
 
 
 class DataStream:
@@ -165,7 +192,7 @@ class DataStream:
 
     def print_processors_stats(self) -> None:
 
-        print("== DataStream statistics ==")
+        print("\n== DataStream statistics ==")
 
         if not self._processors:
             print("No processor found, no data")
@@ -187,10 +214,31 @@ class DataStream:
                 f"on processor"
             )
 
+    def output_pipeline(self, nb: int, plugin: ExportPlugin) -> None:
+
+        if nb <= 0:
+            raise ValueError(
+                "Number of elements must be positive"
+            )
+
+        for proc in self._processors:
+
+            output_data: list[tuple[int, str]] = []
+
+            for _ in range(nb):
+
+                if proc.remaining() == 0:
+                    break
+
+                output_data.append(proc.output())
+
+            if output_data:
+                plugin.process_output(output_data)
+
 
 def code_nexus() -> None:
 
-    print("=== Code Nexus - Data Stream ===")
+    print("=== Code Nexus - Data Pipeline ===")
 
     stream = DataStream()
 
@@ -198,7 +246,10 @@ def code_nexus() -> None:
     text = TextProcessor()
     log = LogProcessor()
 
-    data: list[Any] = [
+    csv_plugin = CSVExportPlugin()
+    json_plugin = JSONExportPlugin()
+
+    data = [
         "Hello world",
         [3.14, -1, 2.71],
         [
@@ -220,53 +271,62 @@ def code_nexus() -> None:
     print("\nInitialize Data Stream...")
     stream.print_processors_stats()
 
-    print("\nRegistering Numeric Processor")
+    print("\nRegistering Processors")
+
     stream.register_processor(numeric)
-
-    print("Send first batch of data on stream:", data)
-
-    stream.process_stream(data)
-    stream.print_processors_stats()
-
-    print("\nRegistering other data processors")
     stream.register_processor(text)
     stream.register_processor(log)
 
-    print("Send the same batch again")
+    print("\nSend first batch of data on stream:", data)
+
     stream.process_stream(data)
     stream.print_processors_stats()
 
     print(
-        "\nConsume some elements from "
-        "the data processors: "
-        "Numeric 3, Text 2, Log 1"
+        "\nSend 3 processed data "
+        "from each processor to a CSV plugin:"
     )
 
-    for _ in range(3):
-        numeric.output()
-
-    for _ in range(2):
-        text.output()
-
-    for _ in range(1):
-        log.output()
+    stream.output_pipeline(3, csv_plugin)
 
     stream.print_processors_stats()
 
-    print()
-    print(
-        "Polymorphism allows DataStream "
-        "to interact with all processors "
-        "through the common DataProcessor "
-        "interface without knowing their "
-        "concrete implementations."
-    )
+    second_batch = [
+        21,
+        [
+            "I love AI",
+            "LLMs are wonderful",
+            "Stay healthy"
+        ],
+        [
+            {
+                "log_level": "ERROR",
+                "log_message":
+                "500 server crash"
+            },
+            {
+                "log_level": "NOTICE",
+                "log_message":
+                "Certificate expires in 10 days"
+            }
+        ],
+        [32, 42, 64, 84, 128, 168],
+        "World hello"
+    ]
+
+    print("\nSend another batch of data:", second_batch)
+
+    stream.process_stream(second_batch)
+    stream.print_processors_stats()
 
     print(
-        "Benefits: extensibility, low "
-        "coupling, code reuse and easier "
-        "maintenance."
+        "\nSend 5 processed data "
+        "from each processor to a JSON plugin:"
     )
+
+    stream.output_pipeline(5, json_plugin)
+
+    stream.print_processors_stats()
 
 
 if __name__ == "__main__":
