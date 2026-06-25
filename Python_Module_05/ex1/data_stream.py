@@ -222,7 +222,7 @@ def code_nexus() -> None:
     print("\nRegistering Numeric Processor")
     stream.register_processor(numeric)
 
-    print("Send first batch of data on stream:", data)
+    print("\nSend first batch of data on stream:", data)
 
     stream.process_stream(data)
     stream.print_processors_stats()
