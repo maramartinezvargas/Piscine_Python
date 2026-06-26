@@ -252,21 +252,6 @@ def code_nexus() -> None:
 
     stream.print_processors_stats()
 
-    print()
-    print(
-        "Polymorphism allows DataStream "
-        "to interact with all processors "
-        "through the common DataProcessor "
-        "interface without knowing their "
-        "concrete implementations."
-    )
-
-    print(
-        "Benefits: extensibility, low "
-        "coupling, code reuse and easier "
-        "maintenance."
-    )
-
 
 if __name__ == "__main__":
     code_nexus()
