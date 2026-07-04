@@ -45,9 +45,9 @@ def display_opponents(opponents: list[tuple[Any, Any]]) -> str:
     for factory, strategy in opponents:
         creature = factory.create_base()
 
-        creature_name = creature.name
-        strategy_name = strategy.__class__.__name__.replace("Strategy", "")
-
+        creature_name: str = creature.name
+        strategy_name: str = strategy.__class__.__name__.replace("Strategy",
+                                                                 "")
         names.append(f"({creature_name}+{strategy_name})")
     # Return the formatted list of names as a string
     return "[ " + ", ".join(names) + " ]"
@@ -55,32 +55,34 @@ def display_opponents(opponents: list[tuple[Any, Any]]) -> str:
 
 if __name__ == "__main__":
     # Initialize factories
-    flame_factory = FlameFactory()
-    aqua_factory = AquaFactory()
-    heal_factory = HealingCreatureFactory()
-    transform_factory = TransformCreatureFactory()
+    flame_factory: FlameFactory = FlameFactory()
+    aqua_factory: AquaFactory = AquaFactory()
+    heal_factory: HealingCreatureFactory = HealingCreatureFactory()
+    transform_factory: TransformCreatureFactory = TransformCreatureFactory()
 
     # Initialize strategies
-    normal = NormalStrategy()
-    aggressive = AggressiveStrategy()
-    defensive = DefensiveStrategy()
+    normal: NormalStrategy = NormalStrategy()
+    aggressive: AggressiveStrategy = AggressiveStrategy()
+    defensive: DefensiveStrategy = DefensiveStrategy()
 
     # Tournament 0: Basic --------------------------------------
     print("Tournament 0: (basic)")
-    opponents = [(flame_factory, normal), (heal_factory, defensive)]
+    opponents: list[tuple[Any, Any]] = [(flame_factory, normal),
+                                        (heal_factory, defensive)]
     print(display_opponents(opponents))
     battle(opponents)
 
     # Tournament 1: Error handling -----------------------------
     print("\nTournament 1: (error)")
-    opponents1 = [(flame_factory, aggressive), (heal_factory, defensive)]
+    opponents1: list[tuple[Any, Any]] = [(flame_factory, aggressive),
+                                         (heal_factory, defensive)]
     print(display_opponents(opponents1))
     battle(opponents1)
 
     # Tournament 2: multiple -----------------------------
     print("\nTournament 2: (multiple)")
-    opponents2 = [(aqua_factory, normal),
-                  (heal_factory, defensive),
-                  (transform_factory, aggressive)]
+    opponents2: list[tuple[Any, Any]] = [(aqua_factory, normal),
+                                         (heal_factory, defensive),
+                                         (transform_factory, aggressive)]
     print(display_opponents(opponents2))
     battle(opponents2)
