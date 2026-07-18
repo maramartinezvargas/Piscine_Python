@@ -18,7 +18,7 @@ PACKAGE_DESCRIPTION = {
 }
 
 
-def package_exists(package: str) -> bool:
+def package_is_installed(package: str) -> bool:
     """Check if the required packages are installed."""
     try:
         importlib.import_module(package)
@@ -37,7 +37,7 @@ def check_dependencies() -> bool:
     all_ok = True
 
     for package in DEPENDENCIES:
-        if package_exists(package):
+        if package_is_installed(package):
             print(
                 f"[OK] {package} "
                 f"({package_version(package)}) - "
