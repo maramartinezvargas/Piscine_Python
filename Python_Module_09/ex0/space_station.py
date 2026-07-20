@@ -32,16 +32,17 @@ def main() -> None:
 
     # Valid station
     try:
-        station = SpaceStation(
-            station_id="ISS001",
-            name="International Space Station",
-            crew_size=6,
-            power_level=85.5,
-            oxygen_level=92.3,
-            last_maintenance=datetime(2026, 7, 20, 20, 30),
-            is_operational=True,
-            notes="All systems nominal."
-        )
+        valid_data = {
+            "station_id": "ISS001",
+            "name": "International Space Station",
+            "crew_size": 6,
+            "power_level": 85.5,
+            "oxygen_level": 92.3,
+            "last_maintenance": "2026-07-20T21:22:00",
+            "is_operational": True,
+            "notes": "All systems nominal."
+        }
+        station = SpaceStation.model_validate(valid_data)
         display_station(station)
     except ValidationError as e:
         print("Expected validation error:")
@@ -51,16 +52,17 @@ def main() -> None:
     print()
     print("=" * 40)
     try:
-        invalid_station_data: SpaceStation = SpaceStation(
-            station_id="ISS001",
-            name="International Space Station",
-            crew_size=25,  # Invalid: exceeds maximum
-            power_level=85.5,
-            oxygen_level=92.3,
-            last_maintenance=datetime(2026, 7, 20, 20, 30),
-            is_operational=True,
-            notes="All systems nominal."
-        )
+        invalid_data = {
+            "station_id": "ISS001",
+            "name": "International Space Station",
+            "crew_size": 25,
+            "power_level": 85.5,
+            "oxygen_level": 92.3,
+            "last_maintenance": "2026-07-20T21:22:00",
+            "is_operational": True,
+            "notes": "All systems nominal."
+        }
+        invalid_station_data = SpaceStation.model_validate(invalid_data)
         display_station(invalid_station_data)
     except ValidationError as e:
         print("Expected validation error:")
