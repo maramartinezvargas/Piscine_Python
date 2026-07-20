@@ -15,6 +15,16 @@ class SpaceStation(BaseModel):
     notes: Optional[str] = Field(max_length=200)
 
 
+def display_station(station: SpaceStation) -> None:
+    print("ID:", station.station_id)
+    print("Name:", station.name)
+    print(f"Crew: {station.crew_size} people")
+    print(f"Power: {station.power_level}%")
+    print(f"Oxygen: {station.oxygen_level}%")
+    print("Status:", "Operational"
+          if station.is_operational else "Non-operational")
+
+
 def main() -> None:
 
     print("Space Station Data Validation")
@@ -32,14 +42,7 @@ def main() -> None:
             is_operational=True,
             notes="All systems nominal."
         )
-        print("Valid station created:")
-        print("ID:", station.station_id)
-        print("Name:", station.name)
-        print(f"Crew: {station.crew_size} people")
-        print(f"Power: {station.power_level}%")
-        print(f"Oxygen: {station.oxygen_level}%")
-        print("Status:", "Operational"
-              if station.is_operational else "Non-operational")
+        display_station(station)
     except ValidationError as e:
         print("Expected validation error:")
         print(e)
@@ -58,15 +61,7 @@ def main() -> None:
             is_operational=True,
             notes="All systems nominal."
         )
-
-        print("Invalid station data:")
-        print("ID:", invalid_station_data.station_id)
-        print("Name:", invalid_station_data.name)
-        print(f"Crew: {invalid_station_data.crew_size} people")
-        print(f"Power: {invalid_station_data.power_level}%")
-        print(f"Oxygen: {invalid_station_data.oxygen_level}%")
-        print("Status:", "Operational"
-              if invalid_station_data.is_operational else "Non-operational")
+        display_station(invalid_station_data)
     except ValidationError as e:
         print("Expected validation error:")
         for error in e.errors():
