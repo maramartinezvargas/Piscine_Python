@@ -24,34 +24,31 @@ class AlienContact(BaseModel):
     message_received: Optional[str] = Field(max_length=500)
     is_verified: bool = Field(default=False)
 
+    @model_validator(mode="after")
+    def validate_business_rules(self: "AlienContact") -> "AlienContact":
 
-@model_validator(mode="after")
-def validate_business_rules(self: "AlienContact") -> "AlienContact":
+        if not self.contact_id.startswith("AC"):
+            """Ensure contact_id starts with 'AC'"""
+            raise ValueError("Contact ID must start with 'AC'")
 
-    if not self.contact_id.startswith("AC-"):
-        """Ensure contact_id starts with 'AC-'"""
-        raise ValueError("contact_id must start with 'AC-'")
+        if self.contact_type == ContactType.PHYSICAL and not self.is_verified:
+            """Ensure physical contacts are verified"""
+            raise ValueError("Physical contacts reports must be verified")
 
-    if self.contact_type == ContactType.PHYSICAL and not self.is_verified:
-        """Ensure physical contacts are verified"""
-        raise ValueError("Physical contacts must be verified")
+        if (self.contact_type == ContactType.TELEPATHIC
+                and self.witness_count < 3):
+            raise ValueError("Telepathic contact requires"
+                             " at least 3 witnesses")
 
-    if self.contact_type == ContactType.TELEPATHIC and self.witness_count < 3:
-        """Ensure telepathic contacts have at least 3 witnesses"""
-        raise ValueError("Telepathic contacts must have at least 3 witnesses")
-
-    if self.signal_strength > 7.0 and not self.message_received:
-        """Ensure strong signals have a message received"""
-        raise ValueError("Contacts with signal strength > 7.0"
-                         " must include a message_received")
-
-    return self
+        if self.signal_strength > 7.0 and not self.message_received:
+            raise ValueError("Strong signals (>7.0) should include"
+                             " received messages")
+        return self
 
 
 def display_contact(contact: AlienContact) -> None:
-    print("Valid contact report created:")
     print("ID:", contact.contact_id)
-    print("Type:", contact.contact_type)
+    print("Type:", contact.contact_type.value)
     print(f"Location: {contact.location}")
     print(f"Signal: {contact.signal_strength}/10")
     print(f"Duration: {contact.duration_minutes} minutes")
@@ -65,19 +62,20 @@ def main() -> None:
 
     # Valid contact report
     try:
+        print("Valid contact report:")
         valid_contact: AlienContact = AlienContact(
             contact_id="AC-2024_001",
             timestamp=datetime.now(),
-            location="Space Station Alpha",
+            location="Area 51, Nevada",
             contact_type=ContactType.RADIO,
-            signal_strength=8.0,
-            duration_minutes=10,
+            signal_strength=8.5,
+            duration_minutes=45,
             witness_count=5,
-            message_received="Hello, Earth!"
+            message_received="Greetings from Zeta Reticuli"
         )
         display_contact(valid_contact)
     except ValidationError as e:
-        print("Expected validation error:")
+        print("Unexpected validation error:")
         for error in e.errors():
             print(error)
 
@@ -86,7 +84,7 @@ def main() -> None:
     print("=" * 40)
     try:
         invalid_contact: AlienContact = AlienContact(
-            contact_id="2024_001",  # Invalid: does not start with 'AC-'
+            contact_id="AC-2024_002",
             timestamp=datetime.now(),
             location="Space Station Beta",
             contact_type=ContactType.TELEPATHIC,
@@ -99,7 +97,8 @@ def main() -> None:
     except ValidationError as e:
         print("Expected validation error:")
         for error in e.errors():
-            print(f"{error['msg']}")
+            clean_msg = error['msg'].replace("Value error, ", "")
+            print(clean_msg)
 
 
 if __name__ == "__main__":
