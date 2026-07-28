@@ -47,8 +47,8 @@ class AlienContact(BaseModel):
 
 
 def display_contact(contact: AlienContact) -> None:
-    print("ID:", contact.contact_id)
-    print("Type:", contact.contact_type.value)
+    print(f"ID: {contact.contact_id}")
+    print(f"Type: {contact.contact_type.value}")
     print(f"Location: {contact.location}")
     print(f"Signal: {contact.signal_strength}/10")
     print(f"Duration: {contact.duration_minutes} minutes")
