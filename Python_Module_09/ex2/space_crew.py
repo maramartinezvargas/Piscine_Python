@@ -58,6 +58,7 @@ class SpaceMission(BaseModel):
                 raise ValueError("Long missions (>365 days) require"
                                  " at least 50% of the crew to have "
                                  "5+ years of experience")
+
         if not all(member.is_active for member in self.crew):
             """Ensure all crew members are active for the mission"""
             raise ValueError("All crew members must be active for the mission")
