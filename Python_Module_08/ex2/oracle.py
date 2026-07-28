@@ -8,11 +8,11 @@ def load_configuration() -> dict[str, str | None]:
     load_dotenv()
 
     return {
-        "MATRIX_MODE": os.getenv("MATRIX_MODE", "development"),
-        "DATABASE_URL": os.getenv("DATABASE_URL"),
-        "API_KEY": os.getenv("API_KEY"),
-        "LOG_LEVEL": os.getenv("LOG_LEVEL", "DEBUG"),
-        "ZION_ENDPOINT": os.getenv("ZION_ENDPOINT"),
+        "MATRIX_MODE": os.getenv("MATRIX_MODE") or "development",
+        "DATABASE_URL": os.getenv("DATABASE_URL") or None,
+        "API_KEY": os.getenv("API_KEY") or None,
+        "LOG_LEVEL": os.getenv("LOG_LEVEL") or "DEBUG",
+        "ZION_ENDPOINT": os.getenv("ZION_ENDPOINT") or None,
     }
 
 
