@@ -43,6 +43,7 @@ def main() -> None:
             "notes": "All systems nominal."
         }
         station = SpaceStation.model_validate(valid_data)
+        print("Valid station created:")
         display_station(station)
     except ValidationError as e:
         print("Expected validation error:")
