@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from typing import Any
 import importlib.metadata
 import sys
 
@@ -14,6 +15,11 @@ except ModuleNotFoundError:
     pd = None
 
 try:
+    import requests as rq
+except ModuleNotFoundError:
+    rq = None
+
+try:
     import matplotlib.pyplot as plt
 except ModuleNotFoundError:
     plt = None
@@ -22,12 +28,14 @@ except ModuleNotFoundError:
 PACKAGE_DESCRIPTION: dict[str, str] = {
     "numpy": "Numerical computation ready",
     "pandas": "Data manipulation ready",
+    "requests": "Network access ready",
     "matplotlib": "Visualization ready"
 }
 
-PACKAGE_MODULES: dict[str, object | None] = {
+PACKAGE_MODULES: dict[str, object] = {
     "numpy": np,
     "pandas": pd,
+    "requests": rq,
     "matplotlib": plt
 }
 
@@ -44,12 +52,8 @@ def check_dependencies() -> bool:
     for package, module in PACKAGE_MODULES.items():
 
         if module is not None:
-            print(
-                f"[OK] {package} "
-                f"({package_version(package)}) - "
-                f"{PACKAGE_DESCRIPTION[package]}"
-            )
-
+            status_tag = f"[OK] {package} ({package_version(package)})"
+            print(f"{status_tag:<30} {PACKAGE_DESCRIPTION[package]}")
         else:
             print(f"[ERROR] {package} is not installed.")
             all_ok = False
@@ -75,12 +79,12 @@ def show_installation_help() -> None:
     print(" poetry run python loading.py")
 
 
-def generate_matrix_data():
+def generate_matrix_data() -> Any:
     """Generate 1000 Matrix data points using numpy."""
     return np.random.normal(loc=100, scale=25, size=1000)
 
 
-def analyze_data(data):
+def analyze_data(data: Any) -> Any:
     """Analyze Matrix data using pandas."""
     print()
     print("Analyzing Matrix data...")
@@ -92,7 +96,7 @@ def analyze_data(data):
     )
 
 
-def create_visualization(data) -> None:
+def create_visualization(data: Any) -> None:
     """Generate a histogram using matplotlib."""
     print("Generating visualization...")
 
