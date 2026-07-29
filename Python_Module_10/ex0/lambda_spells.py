@@ -22,7 +22,7 @@ def spell_transformer(spells: list[str]) -> list[str]:
     return list(map(lambda spell: f"* {spell} *", spells,))
 
 
-def mage_stats(mages: list[dict[str, Any]]) -> dict[str, float]:
+def mage_stats(mages: list[dict[str, Any]]) -> dict[str, Any]:
     """Calculate mage power statistics."""
     return {
         "max_power": max(mages, key=lambda mage: mage["power"],)["power"],
@@ -44,6 +44,12 @@ if __name__ == "__main__":
         "shield",
     ]
 
+    mages = [
+        {"name": "Mara", "power": 120, "element": "water"},
+        {"name": "Gandalf", "power": 90, "element": "light"},
+        {"name": "Merlín", "power": 40, "element": "fire"},
+    ]
+
     print()
     print("Testing artifact sorter...")
     artifacts = artifact_sorter(artifacts)
@@ -56,3 +62,14 @@ if __name__ == "__main__":
     print()
     print("Testing spell transformer...")
     print(*spell_transformer(spells))
+
+    """print("\nTesting power filter (min_power = 80)...")
+    powerful_mages = power_filter(mages, min_power=80)
+    for mage in powerful_mages:
+        print(f" - {mage['name']} ({mage['element']}): {mage['power']} power")
+
+    print("\nTesting mage stats...")
+    stats = mage_stats(mages)
+    print(f" Max Power : {stats['max_power']}")
+    print(f" Min Power : {stats['min_power']}")
+    print(f" Avg Power : {stats['avg_power']}")"""
