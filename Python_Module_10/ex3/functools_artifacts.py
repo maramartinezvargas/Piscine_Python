@@ -90,8 +90,8 @@ def main() -> None:
         "max": "Max"
     }
     operations: list[str] = ["add", "multiply", "max"]
-    elements: list[str] = ["holy", "poison", "earth"]
-    targets: list[str] = ["Jenova", "Sephirot", "Aeris"]
+    # elements: list[str] = ["holy", "poison", "earth"]
+    # targets: list[str] = ["Jenova", "Sephirot", "Aeris"]
     fibonacci_tests: list[int] = [0, 1, 10, 15]
 
     print("\nTesting spell reducer...")
