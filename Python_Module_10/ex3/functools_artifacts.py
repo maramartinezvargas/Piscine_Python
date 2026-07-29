@@ -112,10 +112,10 @@ def main() -> None:
     print(dispatcher(["heal", "shield", "fireball"]))
     print(dispatcher(3.14))
 
-    print("\nTesting partial enchanter...")
-    enchants = partial_enchanter(base_enchantment)
-    for element, target in zip(elements, targets):
-        print(f"{enchants[element](target)}")
+    # print("\nTesting partial enchanter...")
+    # enchants = partial_enchanter(base_enchantment)
+    # for element, target in zip(elements, targets):
+    #     print(f"{enchants[element](target)}")
 
 
 if __name__ == "__main__":
