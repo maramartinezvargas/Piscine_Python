@@ -48,12 +48,11 @@ def spell_sequence(spells: list[Spell]) -> Callable[[str, int], list[str]]:
 
 if __name__ == "__main__":
 
-    # Test function for demostration only
     def fireball(target: str, power: int) -> str:
-        return f"Fireball hits {target} with {power} power"
+        return f"Fireball hits {target}"
 
     def heal(target: str, power: int) -> str:
-        return f"Heals {target} for {power} HP"
+        return f"Heals {target}"
 
     def enough_power(target: str, power: int) -> bool:
         return power >= 10
@@ -73,26 +72,26 @@ if __name__ == "__main__":
         f"Original: {original_power}, "
         f"Amplified: {original_power * multiplier}"
     )
-    print(amplified_fireball("Dragon", original_power))
 
-    print()
-    print("Testing conditional caster...")
-    conditional_fireball = conditional_caster(
-        enough_power,
-        fireball,
-    )
-    print(conditional_fireball("Dragon", 5))
-    print(conditional_fireball("Dragon", 15))
+    # print(amplified_fireball("Dragon", original_power))
 
-    print()
+    # print()
+    # print("Testing conditional caster...")
+    # conditional_fireball = conditional_caster(
+    #     enough_power,
+    #     fireball,
+    # )
+    # print(conditional_fireball("Dragon", 5))
+    # print(conditional_fireball("Dragon", 15))
 
-    print("Testing spell sequence...")
-    sequence = spell_sequence(
-        [
-            fireball,
-            heal,
-        ]
-    )
+    # print()
+    # print("Testing spell sequence...")
+    # sequence = spell_sequence(
+    #     [
+    #         fireball,
+    #         heal,
+    #     ]
+    # )
 
-    for spell in sequence("Dragon", 10):
-        print(spell)
+    # for spell in sequence("Dragon", 10):
+    #     print(spell)
